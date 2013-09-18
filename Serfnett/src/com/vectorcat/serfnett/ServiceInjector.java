@@ -38,6 +38,26 @@ public class ServiceInjector {
 		this.registry = registry;
 	}
 
+	private <I> InjectionListener<I> createInjectionListener(
+			final Set<Service> lookupServices,
+			final Set<Service> foundNewServices) {
+		return new InjectionListener<I>() {
+			@Override
+			public void afterInjection(I injectee) {
+
+				Service service = (Service) injectee;
+
+				if (!lookupServices.contains(service)
+						&& !foundNewServices.contains(service)) {
+
+					foundNewServices.add(service);
+
+					registry.addService(service);
+				}
+			}
+		};
+	}
+
 	private Injector createInjector() {
 
 		Module module = new AbstractModule() {
@@ -80,22 +100,8 @@ public class ServiceInjector {
 					@Override
 					public <I> void hear(TypeLiteral<I> literal,
 							TypeEncounter<I> encounter) {
-
-						encounter.register(new InjectionListener<I>() {
-							@Override
-							public void afterInjection(I injectee) {
-
-								Service service = (Service) injectee;
-
-								if (!lookupServices.contains(service)
-										&& !foundNewServices.contains(service)) {
-
-									foundNewServices.add(service);
-
-									registry.addService(service);
-								}
-							}
-						});
+						encounter.register(createInjectionListener(
+								lookupServices, foundNewServices));
 					}
 				};
 			}
