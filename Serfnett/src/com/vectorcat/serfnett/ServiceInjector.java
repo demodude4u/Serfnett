@@ -38,26 +38,6 @@ public class ServiceInjector {
 		this.registry = registry;
 	}
 
-	private <I> InjectionListener<I> createInjectionListener(
-			final Set<Service> lookupServices,
-			final Set<Service> foundNewServices) {
-		return new InjectionListener<I>() {
-			@Override
-			public void afterInjection(I injectee) {
-
-				Service service = (Service) injectee;
-
-				if (!lookupServices.contains(service)
-						&& !foundNewServices.contains(service)) {
-
-					foundNewServices.add(service);
-
-					registry.addService(service);
-				}
-			}
-		};
-	}
-
 	private Injector createInjector() {
 
 		Module module = new AbstractModule() {
@@ -77,39 +57,59 @@ public class ServiceInjector {
 					bindFeatureInstance(binder(), existingFeature);
 				}
 
-				Matcher<? super TypeLiteral<?>> matcher = createMatcher();
+				Matcher<? super TypeLiteral<?>> matcher = createServiceMatcher();
 
-				bindListener(matcher, createTypeListener(services));
+				bindListener(matcher, createRegistryTypeListener(services));
 			}
 
-			private AbstractMatcher<TypeLiteral<?>> createMatcher() {
-				return new AbstractMatcher<TypeLiteral<?>>() {
-					@Override
-					public boolean matches(TypeLiteral<?> t) {
-						return Service.class.isAssignableFrom(t.getRawType());
-					}
-				};
-			}
-
-			private TypeListener createTypeListener(Collection<Service> services) {
-				final Set<Service> lookupServices = ImmutableSet
-						.copyOf(services);
-				final Set<Service> foundNewServices = Sets.newHashSet();
-
-				return new TypeListener() {
-					@Override
-					public <I> void hear(TypeLiteral<I> literal,
-							TypeEncounter<I> encounter) {
-						encounter.register(createInjectionListener(
-								lookupServices, foundNewServices));
-					}
-				};
-			}
 		};
 
 		Injector injector = Guice.createInjector(module);
 
 		return injector;
+	}
+
+	private <I> InjectionListener<I> createRegistryInjectionListener(
+			final Set<Service> lookupServices,
+			final Set<Service> foundNewServices) {
+		return new InjectionListener<I>() {
+			@Override
+			public void afterInjection(I injectee) {
+
+				Service service = (Service) injectee;
+
+				if (!lookupServices.contains(service)
+						&& !foundNewServices.contains(service)) {
+
+					foundNewServices.add(service);
+
+					registry.addService(service);
+				}
+			}
+		};
+	}
+
+	private TypeListener createRegistryTypeListener(Collection<Service> services) {
+		final Set<Service> lookupServices = ImmutableSet.copyOf(services);
+		final Set<Service> foundNewServices = Sets.newHashSet();
+
+		return new TypeListener() {
+			@Override
+			public <I> void hear(TypeLiteral<I> literal,
+					TypeEncounter<I> encounter) {
+				encounter.register(createRegistryInjectionListener(
+						lookupServices, foundNewServices));
+			}
+		};
+	}
+
+	private AbstractMatcher<TypeLiteral<?>> createServiceMatcher() {
+		return new AbstractMatcher<TypeLiteral<?>>() {
+			@Override
+			public boolean matches(TypeLiteral<?> t) {
+				return Service.class.isAssignableFrom(t.getRawType());
+			}
+		};
 	}
 
 	public <T extends Service> T getService(Class<T> clazz) {
