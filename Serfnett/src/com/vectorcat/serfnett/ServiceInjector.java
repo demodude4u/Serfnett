@@ -57,42 +57,47 @@ public class ServiceInjector {
 					bindFeatureInstance(binder(), existingFeature);
 				}
 
-				Matcher<? super TypeLiteral<?>> matcher = new AbstractMatcher<TypeLiteral<?>>() {
+				Matcher<? super TypeLiteral<?>> matcher = createMatcher();
+
+				bindListener(matcher, createTypeListener(services));
+			}
+
+			private AbstractMatcher<TypeLiteral<?>> createMatcher() {
+				return new AbstractMatcher<TypeLiteral<?>>() {
 					@Override
 					public boolean matches(TypeLiteral<?> t) {
 						return Service.class.isAssignableFrom(t.getRawType());
 					}
 				};
+			}
 
-				{
-					final Set<Service> lookupServices = ImmutableSet
-							.copyOf(services);
-					final Set<Service> foundNewServices = Sets.newHashSet();
+			private TypeListener createTypeListener(Collection<Service> services) {
+				final Set<Service> lookupServices = ImmutableSet
+						.copyOf(services);
+				final Set<Service> foundNewServices = Sets.newHashSet();
 
-					bindListener(matcher, new TypeListener() {
-						@Override
-						public <I> void hear(TypeLiteral<I> literal,
-								TypeEncounter<I> encounter) {
+				return new TypeListener() {
+					@Override
+					public <I> void hear(TypeLiteral<I> literal,
+							TypeEncounter<I> encounter) {
 
-							encounter.register(new InjectionListener<I>() {
-								@Override
-								public void afterInjection(I injectee) {
+						encounter.register(new InjectionListener<I>() {
+							@Override
+							public void afterInjection(I injectee) {
 
-									Service service = (Service) injectee;
+								Service service = (Service) injectee;
 
-									if (!lookupServices.contains(service)
-											&& !foundNewServices
-													.contains(service)) {
+								if (!lookupServices.contains(service)
+										&& !foundNewServices.contains(service)) {
 
-										foundNewServices.add(service);
+									foundNewServices.add(service);
 
-										registry.addService(service);
-									}
+									registry.addService(service);
 								}
-							});
-						}
-					});
-				}
+							}
+						});
+					}
+				};
 			}
 		};
 
