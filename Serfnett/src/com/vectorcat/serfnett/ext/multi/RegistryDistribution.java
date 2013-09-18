@@ -2,11 +2,9 @@ package com.vectorcat.serfnett.ext.multi;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.vectorcat.serfnett.api.Service;
 import com.vectorcat.serfnett.api.ServiceNetwork;
 import com.vectorcat.serfnett.api.ServiceProvider;
@@ -16,12 +14,10 @@ public class RegistryDistribution implements ServiceRegistry, ServiceNetwork {
 
 	private final Function<Service, ServiceRegistry> transform;
 	private final List<ServiceRegistry> registries;
-	private final Set<ServiceRegistry> registryLookup;
 
 	public RegistryDistribution(Iterable<ServiceRegistry> registries,
 			Function<Service, ServiceRegistry> transform) {
 		this.registries = ImmutableList.copyOf(registries);
-		registryLookup = ImmutableSet.copyOf(this.registries);
 		this.transform = transform;
 	}
 

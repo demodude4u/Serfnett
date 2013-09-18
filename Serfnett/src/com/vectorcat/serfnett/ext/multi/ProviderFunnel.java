@@ -24,14 +24,12 @@ public class ProviderFunnel implements ServiceProvider, ServiceNetwork {
 
 	@Override
 	public Collection<ServiceProvider> getProviders() {
-		// TODO Auto-generated method stub
-		return null;
+		return providers;
 	}
 
 	@Override
 	public Collection<ServiceRegistry> getRegistries() {
-		// TODO Auto-generated method stub
-		return null;
+		return ImmutableList.of();
 	}
 
 	@Override

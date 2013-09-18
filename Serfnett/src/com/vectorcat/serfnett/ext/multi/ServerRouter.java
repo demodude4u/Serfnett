@@ -45,8 +45,10 @@ public class ServerRouter implements ServiceProvider, ServiceRegistry,
 
 	@Override
 	public Collection<ServiceRegistry> getRegistries() {
-		// TODO Auto-generated method stub
-		return null;
+		Builder<ServiceRegistry> builder = ImmutableList.builder();
+		builder.addAll(distribution.getRegistries());
+		builder.addAll(funnel.getRegistries());
+		return builder.build();
 	}
 
 	@Override
