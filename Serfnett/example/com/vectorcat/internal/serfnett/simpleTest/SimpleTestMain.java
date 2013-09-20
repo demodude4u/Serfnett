@@ -7,7 +7,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.vectorcat.serfnett.ServiceInjector;
 import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.ext.unit.SimpleServer;
+import com.vectorcat.serfnett.ext.SimpleServer;
 
 public class SimpleTestMain {
 
