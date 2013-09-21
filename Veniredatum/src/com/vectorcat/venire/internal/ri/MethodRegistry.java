@@ -39,8 +39,6 @@ public class MethodRegistry {
 					return o2.toString().compareTo(o1.toString());
 				}
 			});
-			// FIXME DELETEME
-			System.out.println(Arrays.toString(declaredMethods));
 
 			for (Method method : declaredMethods) {
 				method.setAccessible(true);

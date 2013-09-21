@@ -1,11 +1,14 @@
 package com.vectorcat.venire.internal.ri;
 
 class ReturnEvent implements CommandResponseEvent<CallEvent>, CallIdentity {
-	private final int commandID;
-	private final int interfaceID;
-	private final int functionID;
-	private final Object ret;
-	private final Throwable throwable;
+	private int commandID;
+	private int interfaceID;
+	private int functionID;
+	private Object ret;
+	private Throwable throwable;
+
+	ReturnEvent() {
+	}
 
 	ReturnEvent(CallEvent event, Object ret) {
 		this.commandID = event.getCommandID();

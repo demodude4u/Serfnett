@@ -4,17 +4,15 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import com.vectorcat.venire.InterfaceRegistry;
-
 public class InterfaceProxyGenerator {
 
 	private final CallDelegator callDelegator;
-	private final InterfaceRegistry interfaceRegistry;
+	private final RemoteInterfaceRegistry remoteInterfaceRegistry;
 
 	public InterfaceProxyGenerator(CallDelegator callDelegator,
-			InterfaceRegistry interfaceRegistry) {
+			RemoteInterfaceRegistry remoteInterfaceRegistry) {
 		this.callDelegator = callDelegator;
-		this.interfaceRegistry = interfaceRegistry;
+		this.remoteInterfaceRegistry = remoteInterfaceRegistry;
 	}
 
 	private InvocationHandler createInvocationHandler(final int interfaceID) {
@@ -36,7 +34,7 @@ public class InterfaceProxyGenerator {
 
 	@SuppressWarnings("unchecked")
 	public <T> T createProxy(Class<?> interfaceClass) {
-		int interfaceID = interfaceRegistry.getID(interfaceClass);
+		int interfaceID = remoteInterfaceRegistry.getID(interfaceClass);
 		InvocationHandler handler = createInvocationHandler(interfaceID);
 
 		Object proxyInstance = Proxy.newProxyInstance(getProxyClassLoader(),
@@ -47,7 +45,8 @@ public class InterfaceProxyGenerator {
 	@SuppressWarnings("unchecked")
 	public <T> T createProxy(int interfaceID) {
 		InvocationHandler handler = createInvocationHandler(interfaceID);
-		Class<?> interfaceClass = interfaceRegistry.getInterface(interfaceID);
+		Class<?> interfaceClass = remoteInterfaceRegistry
+				.getInterface(interfaceID);
 
 		Object proxyInstance = Proxy.newProxyInstance(getProxyClassLoader(),
 				new Class[] { interfaceClass }, handler);

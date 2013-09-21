@@ -1,10 +1,13 @@
 package com.vectorcat.venire.internal.ri;
 
 class CallEvent implements CommandEvent, CallIdentity {
-	private final int commandID;
-	private final int interfaceID;
-	private final int functionID;
-	private final Object[] parameters;
+	private int commandID;
+	private int interfaceID;
+	private int functionID;
+	private Object[] parameters;
+
+	CallEvent() {
+	}
 
 	CallEvent(CommandIDGenerator idGenerator, int classID, int functionID,
 			Object[] parameters) {

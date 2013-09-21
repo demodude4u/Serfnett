@@ -53,31 +53,6 @@ public class InterfaceRegistry {
 		}
 	}
 
-	// private Function<Object[], Object> createMethodFunction(
-	// final Object instance, final Method method) {
-	// return new Function<Object[], Object>() {
-	// @Override
-	// public Object apply(Object[] input) {
-	// try {
-	// return method.invoke(instance, input);
-	// } catch (IllegalAccessException | IllegalArgumentException
-	// | InvocationTargetException e) {
-	// throw new Error(e);
-	// }
-	// }
-	// };
-	// }
-
-	// Function<Object[], Object> getFunction(int interfaceID, int methodID) {
-	// InterfaceEntry entry = entries.get(interfaceID);
-	//
-	// if (entry == null) {
-	// return null;
-	// }
-	//
-	// return entry.mapIDFunction.get(methodID);
-	// }
-
 	public int getID(Class<?> clazz) {
 		return lookupID.get(clazz);
 	}
@@ -94,47 +69,5 @@ public class InterfaceRegistry {
 	public List<Class<?>> getInterfaces() {
 		return interfaces;
 	}
-
-	// private void populateFunctionMap(InterfaceEntry entry) {
-	// Class<?> clazz = entry.clazz;
-	// Map<Integer, Function<Object[], Object>> mapIDFunction =
-	// entry.mapIDFunction;
-	// Map<Method, Integer> mapMethodID = entry.mapMethodID;
-	//
-	// int nextMethodID = 0;
-	//
-	// while (clazz != null) {
-	// for (Method method : clazz.getDeclaredMethods()) {
-	// mapIDFunction.put(nextMethodID,
-	// createMethodFunction(entry.instance.get(), method));
-	//
-	// mapMethodID.put(method, nextMethodID);
-	//
-	// nextMethodID++;
-	// }
-	//
-	// clazz = clazz.getSuperclass();
-	// }
-	//
-	// }
-	//
-	// private void populateMethodIDMapOnly(InterfaceEntry entry) {
-	// Class<?> clazz = entry.clazz;
-	// Map<Integer, Function<Object[], Object>> mapIDFunction =
-	// entry.mapIDFunction;
-	// Map<Method, Integer> mapMethodID = entry.mapMethodID;
-	//
-	// int nextMethodID = 0;
-	//
-	// while (clazz != null) {
-	// for (Method method : clazz.getDeclaredMethods()) {
-	// mapMethodID.put(method, nextMethodID);
-	//
-	// nextMethodID++;
-	// }
-	//
-	// clazz = clazz.getSuperclass();
-	// }
-	// }
 
 }

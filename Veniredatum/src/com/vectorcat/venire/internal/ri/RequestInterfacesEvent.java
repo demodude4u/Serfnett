@@ -1,7 +1,10 @@
 package com.vectorcat.venire.internal.ri;
 
 class RequestInterfacesEvent implements CommandEvent {
-	private final int commandID;
+	private int commandID;
+
+	RequestInterfacesEvent() {
+	}
 
 	RequestInterfacesEvent(CommandIDGenerator idGenerator) {
 		this.commandID = idGenerator.getNextCommandID();

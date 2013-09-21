@@ -2,10 +2,8 @@ package com.vectorcat.venire;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
@@ -15,6 +13,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 import com.vectorcat.venire.api.EventBus;
+import com.vectorcat.venire.api.StreamPipe;
 
 /**
  * This is an adapter for the {@link com.google.common.eventbus.EventBus} found
@@ -24,7 +23,8 @@ import com.vectorcat.venire.api.EventBus;
  */
 public class KryoStreamEventBus implements EventBus {
 
-	private final Kryo kryo;
+	private final Kryo kryoRead;
+	private final Kryo kryoWrite;
 
 	private final Service inputService;
 	private final com.google.common.eventbus.EventBus eventBus;
@@ -39,11 +39,13 @@ public class KryoStreamEventBus implements EventBus {
 	 * @param inputStream
 	 * @param outputStream
 	 */
-	public KryoStreamEventBus(Kryo kryo, InputStream inputStream,
-			OutputStream outputStream) {
-		this.kryo = kryo;
+	public KryoStreamEventBus(Kryo kryoRead, Kryo kryoWrite,
+			InputStream inputStream, OutputStream outputStream) {
+		this.kryoRead = kryoRead;
+		this.kryoWrite = kryoWrite;
 
-		kryo.setAutoReset(true);
+		// kryoRead.setAutoReset(true);
+		kryoWrite.setAutoReset(true);
 
 		inputService = createInputService(inputStream);
 		eventBus = new com.google.common.eventbus.EventBus();
@@ -52,6 +54,17 @@ public class KryoStreamEventBus implements EventBus {
 		output = new Output(outputStream);
 
 		inputService.start();
+	}
+
+	public KryoStreamEventBus(Kryo kryoRead, Kryo kryoWrite, StreamPipe pipeLeft) {
+		this(kryoRead, kryoWrite, pipeLeft.getLeftInputStream(), pipeLeft
+				.getLeftOutputStream());
+	}
+
+	public KryoStreamEventBus(StreamPipe pipeRight, Kryo kryoRead,
+			Kryo kryoWrite) {
+		this(kryoRead, kryoWrite, pipeRight.getRightInputStream(), pipeRight
+				.getRightOutputStream());
 	}
 
 	private ThreadFactory createDaemonThreadFactory() {
@@ -71,7 +84,8 @@ public class KryoStreamEventBus implements EventBus {
 
 			@Override
 			protected void runOneIteration() throws Exception {
-				Object event = kryo.readClassAndObject(input);
+				Object event = kryoRead.readClassAndObject(input);
+				kryoRead.reset();
 
 				eventBus.post(event);
 			}
@@ -92,23 +106,25 @@ public class KryoStreamEventBus implements EventBus {
 		return new Runnable() {
 			@Override
 			public void run() {
-				kryo.writeClassAndObject(output, event);
+				kryoWrite.writeClassAndObject(output, event);
 				output.flush();
 			}
 		};
 	}
 
 	@Override
-	public void post(Object event) throws InterruptedException {
+	public synchronized void post(Object event) throws InterruptedException {
 		Runnable postTask = createPostTask(event);
 
-		Future<?> future = outputExecutorService.submit(postTask);
+		// Future<?> future = outputExecutorService.submit(postTask);
+		//
+		// try {
+		// future.get();
+		// } catch (ExecutionException e) {
+		// throw new Error(e.getCause());
+		// }
 
-		try {
-			future.get();
-		} catch (ExecutionException e) {
-			throw new Error(e);
-		}
+		postTask.run();
 	}
 
 	@Override

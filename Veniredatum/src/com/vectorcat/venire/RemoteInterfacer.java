@@ -8,37 +8,44 @@ import com.vectorcat.venire.internal.ri.EventCommander;
 import com.vectorcat.venire.internal.ri.EventResponder;
 import com.vectorcat.venire.internal.ri.InterfaceProxyGenerator;
 import com.vectorcat.venire.internal.ri.MethodRegistry;
+import com.vectorcat.venire.internal.ri.RemoteInterfaceRegistry;
 
 public class RemoteInterfacer {
 
-	private final InterfaceRegistry interfaceRegistry;
 	private final InterfaceProxyGenerator proxyGenerator;
-
 	@SuppressWarnings("unused")
 	private final EventResponder eventResponder;
+	private final RemoteInterfaceRegistry remoteInterfaceRegistry;
+
+	public RemoteInterfacer(EventBus bus) {
+		this(bus, InterfaceRegistry.builder().build());
+	}
 
 	public RemoteInterfacer(EventBus bus, InterfaceRegistry interfaceRegistry) {
 		// Guice would be nice here
-		this.interfaceRegistry = interfaceRegistry;
 
 		EventCommander eventCommander = new EventCommander(bus);
+
+		remoteInterfaceRegistry = new RemoteInterfaceRegistry(eventCommander);
+
 		MethodRegistry methodRegistry = new MethodRegistry();
 		CallDelegator callDelegator = new CallDelegator(eventCommander,
-				interfaceRegistry, methodRegistry);
-		proxyGenerator = new InterfaceProxyGenerator(callDelegator,
-				interfaceRegistry);
+				interfaceRegistry, remoteInterfaceRegistry, methodRegistry);
 
-		// This is odd, because my real reference is from the event bus
+		proxyGenerator = new InterfaceProxyGenerator(callDelegator,
+				remoteInterfaceRegistry);
+
+		// XXX This is odd, because my real reference is from the event bus
 		eventResponder = new EventResponder(bus, callDelegator,
 				interfaceRegistry);
 	}
 
-	RemoteInterfacer(InterfaceRegistry registry,
-			InterfaceProxyGenerator proxyGenerator,
-			EventResponder eventResponder) {
-		this.interfaceRegistry = registry;
+	RemoteInterfacer(InterfaceProxyGenerator proxyGenerator,
+			EventResponder eventResponder,
+			RemoteInterfaceRegistry remoteInterfaceRegistry) {
 		this.proxyGenerator = proxyGenerator;
 		this.eventResponder = eventResponder;
+		this.remoteInterfaceRegistry = remoteInterfaceRegistry;
 	}
 
 	public <T> T createRemoteInterface(Class<T> clazz) {
@@ -49,8 +56,7 @@ public class RemoteInterfacer {
 		return proxyGenerator.createProxy(interfaceIndex);
 	}
 
-	public List<Class<?>> getRegisteredInterfaces() {
-		return interfaceRegistry.getInterfaces();
+	public List<Class<?>> getRemoteInterfaces() {
+		return remoteInterfaceRegistry.getInterfaces();
 	}
-
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
@@ -78,7 +79,13 @@ public class EventCommander {
 			}
 		};
 
-		return new FutureTask<>(callable);
+		return new FutureTask<R>(callable) {
+			@Override
+			public R get() throws InterruptedException, ExecutionException {
+				run();// XXX There are caveats ignored
+				return super.get();
+			}
+		};
 	}
 
 	Future<Object> commandCall(int interfaceID, int functionID,

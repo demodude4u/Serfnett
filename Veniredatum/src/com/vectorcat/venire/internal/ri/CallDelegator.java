@@ -12,17 +12,22 @@ public class CallDelegator {
 	private final EventCommander eventCommander;
 	private final InterfaceRegistry interfaceRegistry;
 	private final MethodRegistry methodRegistry;
+	private final RemoteInterfaceRegistry remoteInterfaceRegistry;
 
 	public CallDelegator(EventCommander eventCommander,
-			InterfaceRegistry interfaceRegistry, MethodRegistry methodRegistry) {
+			InterfaceRegistry interfaceRegistry,
+			RemoteInterfaceRegistry remoteInterfaceRegistry,
+			MethodRegistry methodRegistry) {
 		this.eventCommander = eventCommander;
 		this.interfaceRegistry = interfaceRegistry;
+		this.remoteInterfaceRegistry = remoteInterfaceRegistry;
 		this.methodRegistry = methodRegistry;
 	}
 
 	Object call(int interfaceID, Method method, Object[] parameters)
 			throws RemoteInvocationTargetException {
-		Class<?> interfaceClass = interfaceRegistry.getInterface(interfaceID);
+		Class<?> interfaceClass = remoteInterfaceRegistry
+				.getInterface(interfaceID);
 		int functionID = methodRegistry.getID(interfaceClass, method);
 		Future<Object> future = eventCommander.commandCall(interfaceID,
 				functionID, parameters);

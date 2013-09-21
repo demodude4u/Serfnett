@@ -1,15 +1,19 @@
 package com.vectorcat.venire.internal.ri;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class RecieveInterfacesEvent implements
 		CommandResponseEvent<RequestInterfacesEvent> {
-	private final int commandID;
-	private final List<Class<?>> classes;
+	private int commandID;
+	private List<Class<?>> classes;
+
+	RecieveInterfacesEvent() {
+	}
 
 	RecieveInterfacesEvent(RequestInterfacesEvent event, List<Class<?>> classes) {
 		this.commandID = event.getCommandID();
-		this.classes = classes;
+		this.classes = new ArrayList<>(classes);
 	}
 
 	List<Class<?>> getClasses() {
