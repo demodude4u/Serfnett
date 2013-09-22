@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 import com.vectorcat.venire.api.EventBus;
@@ -41,6 +42,9 @@ public class KryoStreamEventBus implements EventBus {
 	 */
 	public KryoStreamEventBus(Kryo kryoRead, Kryo kryoWrite,
 			InputStream inputStream, OutputStream outputStream) {
+		Preconditions.checkArgument(kryoRead != kryoWrite,
+				"Kryo Read and Kryo Write cannot be the same Kryo instance!");
+
 		this.kryoRead = kryoRead;
 		this.kryoWrite = kryoWrite;
 
