@@ -46,7 +46,10 @@ public class KryoStreamEventBusTest {
 	}
 
 	@Test
-	public void testSimpleTest() {
+	// Create with SimpleStreamPipe
+	// Send TestEvent both directions
+	// Confirm received
+	public void testSimpleIntegration() {
 		Log.TRACE();
 
 		Kryo kryoRead1 = new Kryo();
@@ -57,9 +60,9 @@ public class KryoStreamEventBusTest {
 		SimpleStreamPipe pipe = new SimpleStreamPipe();
 
 		KryoStreamEventBus bus1 = new KryoStreamEventBus(kryoRead1, kryoWrite1,
-				pipe);
-		KryoStreamEventBus bus2 = new KryoStreamEventBus(pipe, kryoRead2,
-				kryoWrite2);
+				pipe.getLeft());
+		KryoStreamEventBus bus2 = new KryoStreamEventBus(kryoRead2, kryoWrite2,
+				pipe.getRight());
 
 		TestEvent event1 = new TestEvent("Potato");
 		TestEvent event2 = new TestEvent("BBQ");
@@ -70,16 +73,8 @@ public class KryoStreamEventBusTest {
 		bus1.register(reciever1);
 		bus2.register(reciever2);
 
-		try {
-			bus1.post(event1);
-		} catch (InterruptedException e) {
-			fail();
-		}
-		try {
-			bus2.post(event2);
-		} catch (InterruptedException e) {
-			fail();
-		}
+		bus1.post(event1);
+		bus2.post(event2);
 
 		Tests.assertTrueEventually(new Callable<Boolean>() {
 			@Override

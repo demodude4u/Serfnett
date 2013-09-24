@@ -25,10 +25,13 @@ public class RemoteInterfacerTest {
 	public void setUp() throws Exception {
 	}
 
+	// Create RI pair with different RemoteTest instances
+	// Request remote RI's and call RI methods
+	// Confirm RI's returned correct values
 	private void simpleTest(EventBus bus1, EventBus bus2) {
 		Log.TRACE();
 
-		Builder builder = InterfaceRegistry.builder();
+		Builder<Object> builder = InterfaceRegistry.builder();
 		builder.register(RemoteTest.class, new RemoteTest() {
 			private String string;
 
@@ -57,7 +60,7 @@ public class RemoteInterfacerTest {
 		});
 
 		RemoteInterfacer ri1 = new RemoteInterfacer(bus1);
-		RemoteInterfacer ri2 = new RemoteInterfacer(bus2, builder.build());
+		new RemoteInterfacer(bus2, builder.build());
 
 		List<Class<?>> remoteInterfaces = ri1.getRemoteInterfaces();
 		assertEquals(2, remoteInterfaces.size());
@@ -78,7 +81,9 @@ public class RemoteInterfacerTest {
 	}
 
 	@Test
-	public void testSimpleKryoTest() throws Exception {
+	// Create Bus using KryoStreamEventBus + SimpleStreamPipe
+	// @See SimpleTest
+	public void testKryoSimpleIntegration() throws Exception {
 		Kryo kryoRead1 = new Kryo();
 		Kryo kryoWrite1 = new Kryo();
 		Kryo kryoRead2 = new Kryo();
@@ -87,15 +92,17 @@ public class RemoteInterfacerTest {
 		SimpleStreamPipe pipe = new SimpleStreamPipe();
 
 		KryoStreamEventBus bus1 = new KryoStreamEventBus(kryoRead1, kryoWrite1,
-				pipe);
-		KryoStreamEventBus bus2 = new KryoStreamEventBus(pipe, kryoRead2,
-				kryoWrite2);
+				pipe.getLeft());
+		KryoStreamEventBus bus2 = new KryoStreamEventBus(kryoRead2, kryoWrite2,
+				pipe.getRight());
 
 		simpleTest(bus1, bus2);
 	}
 
 	@Test
-	public void testSimpleTest() {
+	// Create Bus using a pair of Guava's EventBus
+	// @See SimpleTest
+	public void testSimpleIntegration() {
 		final com.google.common.eventbus.EventBus guavaBus1 = new com.google.common.eventbus.EventBus();
 		final com.google.common.eventbus.EventBus guavaBus2 = new com.google.common.eventbus.EventBus();
 		EventBus bus1 = new EventBus() {

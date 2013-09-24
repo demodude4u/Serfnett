@@ -8,7 +8,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Veniredatum/guava-14.0.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="kryo-debug-2.21-all.jar" sourcepath="kryo-source.zip">
+	<classpathentry kind="lib" path="kryo-2.21-all.jar" sourcepath="kryo-source.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Veniredatum/kryo-javadoc.zip!/"/>
 		</attributes>

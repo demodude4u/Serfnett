@@ -18,14 +18,14 @@ import com.vectorcat.venire.test.Tests;
 
 public class SimpleStreamPipeTest {
 
-	private class Feeder extends AbstractExecutionThreadService {
+	private class TestFeeder extends AbstractExecutionThreadService {
 
 		private final InputStream inputStream;
 		private final OutputStream outputStream;
 
 		private volatile int bytesFed = 0;
 
-		public Feeder(InputStream inputStream, OutputStream outputStream) {
+		public TestFeeder(InputStream inputStream, OutputStream outputStream) {
 			this.inputStream = inputStream;
 			this.outputStream = outputStream;
 		}
@@ -56,7 +56,10 @@ public class SimpleStreamPipeTest {
 	}
 
 	@Test
-	public void testSimpleTest() {
+	// Create Feeders that wire the pipe as one long stream
+	// Push data through the stream
+	// Confirm data is intact at the end of the stream
+	public void testDataIntegrity() {
 		final byte[] inputData = new byte[100000];
 		Random rand = new Random(1234);
 		rand.nextBytes(inputData);
@@ -67,11 +70,11 @@ public class SimpleStreamPipeTest {
 
 		SimpleStreamPipe pipe = new SimpleStreamPipe();
 
-		final Feeder feedIn = new Feeder(inputStream,
+		final TestFeeder feedIn = new TestFeeder(inputStream,
 				pipe.getLeftOutputStream());
-		final Feeder feedLoopback = new Feeder(pipe.getRightInputStream(),
-				pipe.getRightOutputStream());
-		final Feeder feedOut = new Feeder(pipe.getLeftInputStream(),
+		final TestFeeder feedLoopback = new TestFeeder(
+				pipe.getRightInputStream(), pipe.getRightOutputStream());
+		final TestFeeder feedOut = new TestFeeder(pipe.getLeftInputStream(),
 				outputStream);
 
 		feedIn.start();

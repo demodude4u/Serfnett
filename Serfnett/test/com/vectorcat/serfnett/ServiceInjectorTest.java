@@ -81,7 +81,7 @@ public class ServiceInjectorTest {
 	// Working DI
 	// Borrow from Collection
 	// New DI on every call
-	public void testGetFeature() {
+	public void testSimpleIntegration() {
 		F3 f3 = new F3();
 		final Collection<Service> services = ImmutableList.<Service> of(f3);
 
