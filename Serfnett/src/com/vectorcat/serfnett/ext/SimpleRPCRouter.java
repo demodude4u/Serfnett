@@ -18,6 +18,9 @@ import com.vectorcat.venire.api.EventBus;
 import com.vectorcat.venire.api.StreamPipe;
 
 /**
+ * This router creates virtual interfaces that communicate across a
+ * bi-directional Stream of data. <br>
+ * <br>
  * Due to current limitations with Veniredatum, the services that are "served"
  * must exist already on some other server, like {@link SimpleServer}. This is
  * because Veniredatum's {@link RemoteInterfacer} does not support changes to
@@ -32,37 +35,40 @@ import com.vectorcat.venire.api.StreamPipe;
  *         ProviderFunnel                              ProviderFunnel
  * </pre>
  */
-public class SimpleRPCRouter implements ServiceProvider {
+public class SimpleRPCRouter extends AbstractServiceNode implements
+		ServiceProvider {
 
 	private final RemoteInterfacer remoteInterfacer;
 
 	private Optional<Collection<Service>> remoteServices = Optional.absent();
 
-	public SimpleRPCRouter(InterfaceRegistry<Service> localServiceRegistry,
-			EventBus bus) {
-		this(new RemoteInterfacer(bus, localServiceRegistry));
+	public SimpleRPCRouter(String descriptor,
+			InterfaceRegistry<Service> localServiceRegistry, EventBus bus) {
+		this(descriptor, new RemoteInterfacer(bus, localServiceRegistry));
 	}
 
 	/**
 	 * @see KryoStreamEventBus
 	 */
-	public SimpleRPCRouter(InterfaceRegistry<Service> localServiceRegistry,
-			Kryo kryoRead, Kryo kryoWrite, InputStream inputStream,
-			OutputStream outputStream) {
-		this(localServiceRegistry, new KryoStreamEventBus(kryoRead, kryoWrite,
-				inputStream, outputStream));
+	public SimpleRPCRouter(String descriptor,
+			InterfaceRegistry<Service> localServiceRegistry, Kryo kryoRead,
+			Kryo kryoWrite, InputStream inputStream, OutputStream outputStream) {
+		this(descriptor, localServiceRegistry, new KryoStreamEventBus(kryoRead,
+				kryoWrite, inputStream, outputStream));
 	}
 
 	/**
 	 * @see KryoStreamEventBus
 	 */
-	public SimpleRPCRouter(InterfaceRegistry<Service> localServiceRegistry,
-			Kryo kryoRead, Kryo kryoWrite, StreamPipe.Connector pipeConnector) {
-		this(localServiceRegistry, new KryoStreamEventBus(kryoRead, kryoWrite,
-				pipeConnector));
+	public SimpleRPCRouter(String descriptor,
+			InterfaceRegistry<Service> localServiceRegistry, Kryo kryoRead,
+			Kryo kryoWrite, StreamPipe.Connector pipeConnector) {
+		this(descriptor, localServiceRegistry, new KryoStreamEventBus(kryoRead,
+				kryoWrite, pipeConnector));
 	}
 
-	SimpleRPCRouter(RemoteInterfacer remoteInterfacer) {
+	SimpleRPCRouter(String descriptor, RemoteInterfacer remoteInterfacer) {
+		super(descriptor);
 		this.remoteInterfacer = remoteInterfacer;
 	}
 

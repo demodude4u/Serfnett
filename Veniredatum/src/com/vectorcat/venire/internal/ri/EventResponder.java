@@ -43,10 +43,10 @@ public class EventResponder {
 
 	private final EventBus bus;
 	private final CallDelegator callDelegator;
-	private final InterfaceRegistry interfaceRegistry;
+	private final InterfaceRegistry<?> interfaceRegistry;
 
 	public EventResponder(EventBus bus, CallDelegator callDelegator,
-			InterfaceRegistry interfaceRegistry) {
+			InterfaceRegistry<?> interfaceRegistry) {
 		this.bus = bus;
 		this.callDelegator = callDelegator;
 		this.interfaceRegistry = interfaceRegistry;

@@ -10,12 +10,12 @@ import com.vectorcat.venire.InterfaceRegistry;
 public class CallDelegator {
 
 	private final EventCommander eventCommander;
-	private final InterfaceRegistry interfaceRegistry;
+	private final InterfaceRegistry<?> interfaceRegistry;
 	private final MethodRegistry methodRegistry;
 	private final RemoteInterfaceRegistry remoteInterfaceRegistry;
 
 	public CallDelegator(EventCommander eventCommander,
-			InterfaceRegistry interfaceRegistry,
+			InterfaceRegistry<?> interfaceRegistry,
 			RemoteInterfaceRegistry remoteInterfaceRegistry,
 			MethodRegistry methodRegistry) {
 		this.eventCommander = eventCommander;

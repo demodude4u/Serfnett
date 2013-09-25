@@ -3,10 +3,19 @@
 	<classpathentry kind="src" path="example"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="guava-14.0.1.jar"/>
+	<classpathentry kind="lib" path="guava-14.0.1.jar" sourcepath="guava-14.0.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Serfnett/guava-14.0.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="guice-3.0.jar"/>
 	<classpathentry kind="lib" path="javax.inject.jar"/>
 	<classpathentry kind="lib" path="aopalliance.jar"/>
+	<classpathentry kind="lib" path="jgraphx.jar" sourcepath="jgraphx-sources.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Serfnett/jgraphx-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Veniredatum"/>

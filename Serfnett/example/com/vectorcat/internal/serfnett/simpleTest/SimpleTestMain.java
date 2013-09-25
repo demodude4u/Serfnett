@@ -12,7 +12,7 @@ import com.vectorcat.serfnett.ext.SimpleServer;
 public class SimpleTestMain {
 
 	public static void main(String[] args) throws InterruptedException {
-		SimpleServer simpleServer = new SimpleServer();
+		SimpleServer simpleServer = new SimpleServer("SimpleTestMain");
 
 		Module module = new AbstractModule() {
 			@Override

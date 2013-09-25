@@ -1,21 +1,26 @@
 package com.vectorcat.serfnett.ext;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.vectorcat.serfnett.api.Service;
 import com.vectorcat.serfnett.api.ServiceNode;
 import com.vectorcat.serfnett.api.ServiceProvider;
 
-public class ProviderFunnel extends AbstractServiceNode implements
+public class ProviderSwitch extends AbstractServiceNode implements
 		ServiceProvider {
 
 	private final ImmutableList<ServiceProvider> providers;
+	private final Function<List<ServiceProvider>, ServiceProvider> selector;
 
-	public ProviderFunnel(String descriptor, Iterable<ServiceProvider> providers) {
+	public <T> ProviderSwitch(String descriptor,
+			List<ServiceProvider> providers,
+			Function<List<ServiceProvider>, ServiceProvider> selector) {
 		super(descriptor);
 		this.providers = ImmutableList.copyOf(providers);
+		this.selector = selector;
 	}
 
 	@Override
@@ -25,13 +30,7 @@ public class ProviderFunnel extends AbstractServiceNode implements
 
 	@Override
 	public Collection<Service> getServices() {
-		Builder<Service> builder = ImmutableList.builder();
-
-		for (ServiceProvider provider : providers) {
-			builder.addAll(provider.getServices());
-		}
-
-		return builder.build();
+		ServiceProvider selectedProvider = selector.apply(providers);
+		return selectedProvider.getServices();
 	}
-
 }

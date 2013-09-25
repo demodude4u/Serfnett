@@ -21,7 +21,7 @@ public class RemoteInterfacer {
 		this(bus, InterfaceRegistry.builder().build());
 	}
 
-	public RemoteInterfacer(EventBus bus, InterfaceRegistry interfaceRegistry) {
+	public RemoteInterfacer(EventBus bus, InterfaceRegistry<?> interfaceRegistry) {
 		// Guice would be nice here
 
 		EventCommander eventCommander = new EventCommander(bus);

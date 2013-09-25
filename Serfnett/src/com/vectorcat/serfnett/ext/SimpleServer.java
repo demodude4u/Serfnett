@@ -8,9 +8,14 @@ import com.vectorcat.serfnett.api.Service;
 import com.vectorcat.serfnett.api.ServiceProvider;
 import com.vectorcat.serfnett.api.ServiceRegistry;
 
-public class SimpleServer implements ServiceProvider, ServiceRegistry {
+public class SimpleServer extends AbstractServiceNode implements
+		ServiceProvider, ServiceRegistry {
 
 	private final Set<Service> services = Sets.newLinkedHashSet();
+
+	public SimpleServer(String descriptor) {
+		super(descriptor);
+	}
 
 	@Override
 	public void addService(Service service) {

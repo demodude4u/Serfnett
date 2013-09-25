@@ -1,22 +1,23 @@
 package com.vectorcat.serfnett.ext;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceNetwork;
-import com.vectorcat.serfnett.api.ServiceProvider;
+import com.vectorcat.serfnett.api.ServiceNode;
 import com.vectorcat.serfnett.api.ServiceRegistry;
 
-public class RegistryDistribution implements ServiceRegistry, ServiceNetwork {
+public class RegistryDistribution extends AbstractServiceNode implements
+		ServiceRegistry {
 
 	private final Function<Service, ServiceRegistry> transform;
-	private final List<ServiceRegistry> registries;
+	private final ImmutableList<ServiceRegistry> registries;
 
-	public RegistryDistribution(Iterable<ServiceRegistry> registries,
+	public RegistryDistribution(String descriptor,
+			Iterable<ServiceRegistry> registries,
 			Function<Service, ServiceRegistry> transform) {
+		super(descriptor);
 		this.registries = ImmutableList.copyOf(registries);
 		this.transform = transform;
 	}
@@ -27,12 +28,7 @@ public class RegistryDistribution implements ServiceRegistry, ServiceNetwork {
 	}
 
 	@Override
-	public Collection<ServiceProvider> getProviders() {
-		return ImmutableList.of();
-	}
-
-	@Override
-	public Collection<ServiceRegistry> getRegistries() {
+	public Collection<? extends ServiceNode> getConnectedNodes() {
 		return registries;
 	}
 

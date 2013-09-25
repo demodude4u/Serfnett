@@ -13,8 +13,8 @@ import com.google.common.util.concurrent.AbstractService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
-import com.vectorcat.serfnett.ServiceInjector;
 import com.vectorcat.serfnett.api.Service;
+import com.vectorcat.serfnett.api.ServiceNode;
 import com.vectorcat.serfnett.api.ServiceProvider;
 import com.vectorcat.serfnett.api.ServiceRegistry;
 
@@ -87,6 +87,16 @@ public class ServiceInjectorTest {
 
 		ServiceProvider provider = new ServiceProvider() {
 			@Override
+			public Collection<? extends ServiceNode> getConnectedNodes() {
+				return ImmutableList.of();
+			}
+
+			@Override
+			public String getDescriptor() {
+				return "Test Provider";
+			}
+
+			@Override
 			public Collection<com.vectorcat.serfnett.api.Service> getServices() {
 				return services;
 			}
@@ -106,6 +116,16 @@ public class ServiceInjectorTest {
 			@Override
 			public void addService(Service service) {
 				registryAdd.add(service);
+			}
+
+			@Override
+			public Collection<? extends ServiceNode> getConnectedNodes() {
+				return ImmutableList.of();
+			}
+
+			@Override
+			public String getDescriptor() {
+				return "Test Registry";
 			}
 
 			@Override
