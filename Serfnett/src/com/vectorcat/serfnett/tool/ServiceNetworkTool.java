@@ -12,7 +12,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import com.google.common.base.Function;
@@ -23,9 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mxgraph.layout.mxCompactTreeLayout;
-import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxIGraphLayout;
-import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
@@ -136,8 +133,6 @@ public class ServiceNetworkTool {
 	private final mxGraph graph;
 	private final mxGraphComponent graphComponent;
 
-	private JScrollPane scrollPane;
-
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -146,9 +141,12 @@ public class ServiceNetworkTool {
 		nodes = createToolNodeGraph(roots);
 
 		graph = new mxGraph();
-		graph.setEnabled(false);
+
 		graphComponent = new mxGraphComponent(graph);
-		graphComponent.setEnabled(false);
+		graphComponent.setExportEnabled(false);
+		graphComponent.setFoldingEnabled(false);
+		graphComponent.setPanning(true);
+
 		jFrame = createJFrame(graphComponent);
 	}
 
@@ -175,10 +173,7 @@ public class ServiceNetworkTool {
 		JButton btnRefresh = new JButton("Refresh");
 		panel_1.add(btnRefresh);
 
-		scrollPane = new JScrollPane();
-		splitPane.setRightComponent(scrollPane);
-
-		scrollPane.setViewportView(graph);
+		splitPane.setRightComponent(graph);
 
 		jframe.pack();
 		jframe.setLocationRelativeTo(null);
@@ -277,13 +272,8 @@ public class ServiceNetworkTool {
 			graphModel.endUpdate();
 		}
 
-		// define layout
-		mxFastOrganicLayout fastOrganicLayout = new mxFastOrganicLayout(graph);
-		mxOrganicLayout organicLayout = new mxOrganicLayout(graph);
-		mxCompactTreeLayout compactTreeLayout = new mxCompactTreeLayout(graph);
-		mxIGraphLayout layout = compactTreeLayout;
+		mxIGraphLayout layout = new mxCompactTreeLayout(graph);
 
-		// layout using morphing
 		graph.getModel().beginUpdate();
 		try {
 			layout.execute(graph.getDefaultParent());
@@ -295,16 +285,12 @@ public class ServiceNetworkTool {
 				@Override
 				public void invoke(Object arg0, mxEventObject arg1) {
 					graph.getModel().endUpdate();
-					// fitViewport();
 				}
 
 			});
 
 			morph.startAnimation();
 		}
-
-		// jFrame.getContentPane().revalidate();
-		// jFrame.getContentPane().repaint();
 
 	}
 
