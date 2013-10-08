@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.vectorcat.serfnett.api.Service;
+import com.vectorcat.serfnett.spi.Service;
 
 @Singleton
 class Logic extends AbstractScheduledService implements Service {

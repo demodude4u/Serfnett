@@ -3,7 +3,7 @@ package com.vectorcat.internal.serfnett.simpleTest;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.vectorcat.serfnett.api.Service;
+import com.vectorcat.serfnett.spi.Service;
 
 @Singleton
 class Data extends AbstractIdleService implements Service {

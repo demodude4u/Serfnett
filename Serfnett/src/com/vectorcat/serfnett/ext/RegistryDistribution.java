@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceNode;
-import com.vectorcat.serfnett.api.ServiceRegistry;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceNode;
+import com.vectorcat.serfnett.spi.ServiceRegistry;
 
 public class RegistryDistribution extends AbstractServiceNode implements
 		ServiceRegistry {

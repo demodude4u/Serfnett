@@ -9,13 +9,13 @@ import com.esotericsoftware.kryo.Kryo;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceProvider;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceProvider;
 import com.vectorcat.venire.InterfaceRegistry;
 import com.vectorcat.venire.KryoStreamEventBus;
-import com.vectorcat.venire.RemoteInterfacer;
-import com.vectorcat.venire.api.EventBus;
-import com.vectorcat.venire.api.StreamPipe;
+import com.vectorcat.venire.EventBusRemoteInterfacer;
+import com.vectorcat.venire.spi.EventBus;
+import com.vectorcat.venire.spi.StreamPipe;
 
 /**
  * This router creates virtual interfaces that communicate across a
@@ -23,7 +23,7 @@ import com.vectorcat.venire.api.StreamPipe;
  * <br>
  * Due to current limitations with Veniredatum, the services that are "served"
  * must exist already on some other server, like {@link SimpleServer}. This is
- * because Veniredatum's {@link RemoteInterfacer} does not support changes to
+ * because Veniredatum's {@link EventBusRemoteInterfacer} does not support changes to
  * it's collection of interfaces over time, yet. <br>
  * <br>
  * A simple, working setup can be as follows:<br>
@@ -38,13 +38,13 @@ import com.vectorcat.venire.api.StreamPipe;
 public class SimpleRPCRouter extends AbstractServiceNode implements
 		ServiceProvider {
 
-	private final RemoteInterfacer remoteInterfacer;
+	private final EventBusRemoteInterfacer remoteInterfacer;
 
 	private Optional<Collection<Service>> remoteServices = Optional.absent();
 
 	public SimpleRPCRouter(String descriptor,
 			InterfaceRegistry<Service> localServiceRegistry, EventBus bus) {
-		this(descriptor, new RemoteInterfacer(bus, localServiceRegistry));
+		this(descriptor, new EventBusRemoteInterfacer(bus, localServiceRegistry));
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class SimpleRPCRouter extends AbstractServiceNode implements
 				kryoWrite, pipeConnector));
 	}
 
-	SimpleRPCRouter(String descriptor, RemoteInterfacer remoteInterfacer) {
+	SimpleRPCRouter(String descriptor, EventBusRemoteInterfacer remoteInterfacer) {
 		super(descriptor);
 		this.remoteInterfacer = remoteInterfacer;
 	}

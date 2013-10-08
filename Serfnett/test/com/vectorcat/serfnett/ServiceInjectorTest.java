@@ -13,10 +13,10 @@ import com.google.common.util.concurrent.AbstractService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceNode;
-import com.vectorcat.serfnett.api.ServiceProvider;
-import com.vectorcat.serfnett.api.ServiceRegistry;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceNode;
+import com.vectorcat.serfnett.spi.ServiceProvider;
+import com.vectorcat.serfnett.spi.ServiceRegistry;
 
 public class ServiceInjectorTest {
 
@@ -97,7 +97,7 @@ public class ServiceInjectorTest {
 			}
 
 			@Override
-			public Collection<com.vectorcat.serfnett.api.Service> getServices() {
+			public Collection<com.vectorcat.serfnett.spi.Service> getServices() {
 				return services;
 			}
 		};

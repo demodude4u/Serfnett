@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.vectorcat.venire.InterfaceRegistry;
-import com.vectorcat.venire.api.EventBus;
+import com.vectorcat.venire.spi.EventBus;
 
 public class EventResponder {
 

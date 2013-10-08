@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceNode;
-import com.vectorcat.serfnett.api.ServiceProvider;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceNode;
+import com.vectorcat.serfnett.spi.ServiceProvider;
 
 public class ProviderFunnel extends AbstractServiceNode implements
 		ServiceProvider {

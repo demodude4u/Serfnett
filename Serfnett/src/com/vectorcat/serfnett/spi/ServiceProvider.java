@@ -1,4 +1,4 @@
-package com.vectorcat.serfnett.api;
+package com.vectorcat.serfnett.spi;
 
 import java.util.Collection;
 

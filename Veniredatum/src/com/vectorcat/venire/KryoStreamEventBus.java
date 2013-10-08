@@ -10,8 +10,8 @@ import com.esotericsoftware.kryo.io.Output;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
-import com.vectorcat.venire.api.EventBus;
-import com.vectorcat.venire.api.StreamPipe;
+import com.vectorcat.venire.spi.EventBus;
+import com.vectorcat.venire.spi.StreamPipe;
 
 /**
  * This is an adapter for the {@link com.google.common.eventbus.EventBus} found

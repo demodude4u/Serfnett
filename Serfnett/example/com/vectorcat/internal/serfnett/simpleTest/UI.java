@@ -1,6 +1,6 @@
 package com.vectorcat.internal.serfnett.simpleTest;
 
-import com.vectorcat.serfnett.api.Service;
+import com.vectorcat.serfnett.spi.Service;
 
 public interface UI extends Service {
 

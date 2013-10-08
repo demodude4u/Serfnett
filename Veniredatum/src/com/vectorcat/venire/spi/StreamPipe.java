@@ -1,4 +1,4 @@
-package com.vectorcat.venire.api;
+package com.vectorcat.venire.spi;
 
 import java.io.InputStream;
 import java.io.OutputStream;

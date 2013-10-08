@@ -16,9 +16,9 @@ import com.google.inject.matcher.Matcher;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceProvider;
-import com.vectorcat.serfnett.api.ServiceRegistry;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceProvider;
+import com.vectorcat.serfnett.spi.ServiceRegistry;
 
 public class ServiceInjector {
 

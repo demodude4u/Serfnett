@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceProvider;
-import com.vectorcat.serfnett.api.ServiceRegistry;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceProvider;
+import com.vectorcat.serfnett.spi.ServiceRegistry;
 
 public class SimpleServer extends AbstractServiceNode implements
 		ServiceProvider, ServiceRegistry {
@@ -32,9 +32,6 @@ public class SimpleServer extends AbstractServiceNode implements
 
 	@Override
 	public void removeService(Service service) {
-		if (services.contains(service)) {
-
-		}
 		boolean removed = services.remove(service);
 		if (removed) {
 			service.stop();

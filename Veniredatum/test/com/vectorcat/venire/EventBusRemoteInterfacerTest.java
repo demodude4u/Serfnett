@@ -11,9 +11,9 @@ import org.junit.Test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.minlog.Log;
 import com.vectorcat.venire.InterfaceRegistry.Builder;
-import com.vectorcat.venire.api.EventBus;
+import com.vectorcat.venire.spi.EventBus;
 
-public class RemoteInterfacerTest {
+public class EventBusRemoteInterfacerTest {
 
 	private interface RemoteTest {
 		public String getString();
@@ -59,8 +59,8 @@ public class RemoteInterfacerTest {
 			}
 		});
 
-		RemoteInterfacer ri1 = new RemoteInterfacer(bus1);
-		new RemoteInterfacer(bus2, builder.build());
+		EventBusRemoteInterfacer ri1 = new EventBusRemoteInterfacer(bus1);
+		new EventBusRemoteInterfacer(bus2, builder.build());
 
 		List<Class<?>> remoteInterfaces = ri1.getRemoteInterfaces();
 		assertEquals(2, remoteInterfaces.size());

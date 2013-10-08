@@ -1,4 +1,4 @@
-package com.vectorcat.serfnett.api;
+package com.vectorcat.serfnett.spi;
 
 public interface ServiceRegistry extends ServiceNode {
 	public void addService(Service service);

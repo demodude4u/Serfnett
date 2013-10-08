@@ -3,8 +3,8 @@ package com.vectorcat.venire;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.vectorcat.venire.api.StreamPipe;
 import com.vectorcat.venire.internal.CircularByteBuffer;
+import com.vectorcat.venire.spi.StreamPipe;
 
 public class SimpleStreamPipe implements StreamPipe {
 

@@ -13,7 +13,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.Futures;
-import com.vectorcat.venire.api.EventBus;
+import com.vectorcat.venire.spi.EventBus;
 
 public class EventCommander {
 

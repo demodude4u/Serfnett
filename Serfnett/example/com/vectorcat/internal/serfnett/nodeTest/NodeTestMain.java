@@ -9,13 +9,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AbstractIdleService;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceNode;
-import com.vectorcat.serfnett.api.ServiceProvider;
 import com.vectorcat.serfnett.ext.ProviderFunnel;
 import com.vectorcat.serfnett.ext.ProviderSwitch;
 import com.vectorcat.serfnett.ext.ServiceFilter;
 import com.vectorcat.serfnett.ext.SimpleServer;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceNode;
+import com.vectorcat.serfnett.spi.ServiceProvider;
 import com.vectorcat.serfnett.tool.ServiceNetworkTool;
 
 public class NodeTestMain {

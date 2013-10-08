@@ -2,26 +2,28 @@ package com.vectorcat.venire;
 
 import java.util.List;
 
-import com.vectorcat.venire.api.EventBus;
 import com.vectorcat.venire.internal.ri.CallDelegator;
 import com.vectorcat.venire.internal.ri.EventCommander;
 import com.vectorcat.venire.internal.ri.EventResponder;
 import com.vectorcat.venire.internal.ri.InterfaceProxyGenerator;
 import com.vectorcat.venire.internal.ri.MethodRegistry;
 import com.vectorcat.venire.internal.ri.RemoteInterfaceRegistry;
+import com.vectorcat.venire.spi.EventBus;
+import com.vectorcat.venire.spi.RemoteInterfacer;
 
-public class RemoteInterfacer {
+public class EventBusRemoteInterfacer implements RemoteInterfacer {
 
 	private final InterfaceProxyGenerator proxyGenerator;
 	@SuppressWarnings("unused")
 	private final EventResponder eventResponder;
 	private final RemoteInterfaceRegistry remoteInterfaceRegistry;
 
-	public RemoteInterfacer(EventBus bus) {
+	public EventBusRemoteInterfacer(EventBus bus) {
 		this(bus, InterfaceRegistry.builder().build());
 	}
 
-	public RemoteInterfacer(EventBus bus, InterfaceRegistry<?> interfaceRegistry) {
+	public EventBusRemoteInterfacer(EventBus bus,
+			InterfaceRegistry<?> interfaceRegistry) {
 		// Guice would be nice here
 
 		EventCommander eventCommander = new EventCommander(bus);
@@ -40,7 +42,7 @@ public class RemoteInterfacer {
 				interfaceRegistry);
 	}
 
-	RemoteInterfacer(InterfaceProxyGenerator proxyGenerator,
+	EventBusRemoteInterfacer(InterfaceProxyGenerator proxyGenerator,
 			EventResponder eventResponder,
 			RemoteInterfaceRegistry remoteInterfaceRegistry) {
 		this.proxyGenerator = proxyGenerator;
@@ -48,14 +50,17 @@ public class RemoteInterfacer {
 		this.remoteInterfaceRegistry = remoteInterfaceRegistry;
 	}
 
+	@Override
 	public <T> T createRemoteInterface(Class<T> clazz) {
 		return proxyGenerator.createProxy(clazz);
 	}
 
+	@Override
 	public <T> T createRemoteInterface(int interfaceIndex) {
 		return proxyGenerator.createProxy(interfaceIndex);
 	}
 
+	@Override
 	public List<Class<?>> getRemoteInterfaces() {
 		return remoteInterfaceRegistry.getInterfaces();
 	}

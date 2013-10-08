@@ -6,8 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.vectorcat.serfnett.ServiceInjector;
-import com.vectorcat.serfnett.api.Service;
 import com.vectorcat.serfnett.ext.SimpleServer;
+import com.vectorcat.serfnett.spi.Service;
 
 public class SimpleTestMain {
 

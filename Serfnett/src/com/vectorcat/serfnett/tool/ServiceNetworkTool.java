@@ -30,10 +30,10 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
-import com.vectorcat.serfnett.api.Service;
-import com.vectorcat.serfnett.api.ServiceNode;
-import com.vectorcat.serfnett.api.ServiceProvider;
-import com.vectorcat.serfnett.api.ServiceRegistry;
+import com.vectorcat.serfnett.spi.Service;
+import com.vectorcat.serfnett.spi.ServiceNode;
+import com.vectorcat.serfnett.spi.ServiceProvider;
+import com.vectorcat.serfnett.spi.ServiceRegistry;
 
 public class ServiceNetworkTool {
 

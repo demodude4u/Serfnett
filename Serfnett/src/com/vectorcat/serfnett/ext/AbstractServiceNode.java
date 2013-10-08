@@ -3,7 +3,7 @@ package com.vectorcat.serfnett.ext;
 import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
-import com.vectorcat.serfnett.api.ServiceNode;
+import com.vectorcat.serfnett.spi.ServiceNode;
 
 public abstract class AbstractServiceNode implements ServiceNode {
 
