@@ -8,7 +8,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Serfnett/guava-14.0.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="guice-3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="guice-3.0.jar" sourcepath="guice-3.0-sources.zip"/>
 	<classpathentry exported="true" kind="lib" path="javax.inject.jar"/>
 	<classpathentry exported="true" kind="lib" path="aopalliance.jar"/>
 	<classpathentry kind="lib" path="jgraphx.jar" sourcepath="jgraphx-sources.zip">
