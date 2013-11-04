@@ -16,7 +16,7 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 
 	public static final double FPS = 60;
 
-	private final ParticleSpawnerService spawnerService;
+	private final IngamusEventBus eventBus;
 	private final ParticleController controller;
 
 	private final LinkedHashSet<Particle> particles = Sets.newLinkedHashSet();
@@ -29,8 +29,8 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 
 	@Inject
 	ParticleControllerService(IngamusEventBus eventBus,
-			ParticleSpawnerService spawnerService, ParticleController controller) {
-		this.spawnerService = spawnerService;
+			ParticleController controller) {
+		this.eventBus = eventBus;
 		this.controller = controller;
 
 		eventBus.register(this);
@@ -66,6 +66,7 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 			Particle particle = event.getCastedActor();
 			controller.onParticleDisposed(particle);
 			onParticleDisposed(particle);
+			eventBus.post(new ParticleDisposedEvent(particle));
 		}
 	}
 
@@ -75,6 +76,7 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 			Particle particle = event.getCastedActor();
 			controller.onParticleSpawned(particle);
 			onParticleSpawned(particle);
+			eventBus.post(new ParticleSpawnedEvent(particle));
 		}
 	}
 
@@ -95,17 +97,16 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 			firstIterationTimeStamp = lastIterationTimeStamp = currentTimeMillis;
 		}
 
-		double seconds = (currentTimeMillis - lastIterationTimeStamp) / 1000.0;
-		double secondsElapsed = (currentTimeMillis - firstIterationTimeStamp) / 1000.0;
-
 		// double simulationSeconds = seconds;
 		double simulationSeconds = 1.0 / FPS;
-		// double simulationSeconds = 0.1 / FPS;
+		// double simulationSeconds = 0.2 / FPS;
 		simulationSecondsElapsed += simulationSeconds;
 
 		controller.runDuration(simulationSeconds, simulationSecondsElapsed);
 
-		spawnerService.updateActors();
+		// spawnerService.updateActors();
+		eventBus.post(new UpdateParticlesEvent(simulationSeconds,
+				simulationSecondsElapsed));
 
 		applyPhysicsForDuration(particles, simulationSeconds);
 

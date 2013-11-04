@@ -1,7 +1,10 @@
 package com.vectorcat.ingamus.example.particles;
 
 import java.awt.Canvas;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
@@ -18,7 +21,8 @@ import com.vectorcat.ingamus.IngamusActorService.BatchJob;
 import com.vectorcat.ingamus.IngamusEngine;
 import com.vectorcat.ingamus.IngamusEngine.Builder;
 import com.vectorcat.ingamus.example.particles.controller.TestController;
-import com.vectorcat.ingamus.example.particles.renderer.TestRenderer;
+import com.vectorcat.ingamus.example.particles.renderer.TestRendererJOGL;
+import com.vectorcat.ingamus.example.particles.renderer.TestRendererJava2D;
 
 public class ParticlesMain {
 
@@ -37,11 +41,17 @@ public class ParticlesMain {
 				bindNamed(Canvas.class, "Display").toInstance(new Canvas());
 				bindNamed(FPSMonitor.class, "ParticleController").to(
 						ParticleControllerService.class);
-				bindNamed(FPSMonitor.class, "ParticleRenderer").to(
-						ParticleRenderingService.class);
+				bindNamed(FPSMonitor.class, "ParticleRendererJava2D").to(
+						ParticleRenderingServiceJava2D.class);
+				bindNamed(FPSMonitor.class, "ParticleRendererJOGL").to(
+						ParticleRenderingServiceJOGL.class);
 
 				bind(ParticleController.class).to(TestController.class);
-				bind(ParticleRenderer.class).to(TestRenderer.class);
+				bind(ParticleRendererJava2D.class).to(TestRendererJava2D.class);
+
+				install(new FactoryModuleBuilder().implement(
+						ParticleRendererJOGL.class, TestRendererJOGL.class)
+						.build(ParticleRendererJOGL.Factory.class));
 			}
 
 			@Provides
@@ -62,19 +72,35 @@ public class ParticlesMain {
 
 		engine.injectService(ParticleControllerService.class);
 
-		ParticleRenderingService renderingService = engine
-				.injectService(ParticleRenderingService.class);
+		// Uncomment to show service network
+		// ServiceNetworkTool serviceNetworkTool = new
+		// ServiceNetworkTool(engine);
+		// serviceNetworkTool.show();
 
-		viewCanvas(renderingService.getCanvas(), 512, 512);
+		// Uncomment to show the Java2D version of rendering
+		// ParticleRenderingServiceJava2D renderingServiceJava2D = engine
+		// .injectService(ParticleRenderingServiceJava2D.class);
+		// viewComponent(renderingServiceJava2D.getCanvas(), 0, 512, 512);
+
+		ParticleRenderingServiceJOGL renderingServiceJOGL = engine
+				.injectService(ParticleRenderingServiceJOGL.class);
+		viewComponent(renderingServiceJOGL.getCanvas(), 550, 512, 512);
 	}
 
-	private static void viewCanvas(Canvas canvas, int width, int height) {
+	private static void viewComponent(Component component, int x, int width,
+			int height) {
 		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(canvas);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+		frame.getContentPane().add(component);
 		frame.getContentPane().setPreferredSize(new Dimension(width, height));
 		frame.pack();
 		frame.setVisible(true);
+		frame.setLocation(x, 0);
 	}
-
 }

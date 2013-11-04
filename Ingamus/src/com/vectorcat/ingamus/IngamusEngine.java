@@ -68,7 +68,7 @@ public final class IngamusEngine implements ServiceProvider, ServiceRegistry {
 	// XXX Find a cleaner way to do this "assisted inject"
 	static class CompositionFactory {
 		ServiceInjector createInjector(IngamusEngine engine,
-				final List<Module> externalModules,
+				final Collection<Module> modules,
 				Set<ServiceProvider> serviceProviders) {
 			ProviderFunnel provider = new ProviderFunnel(
 					"Ingamus Internal Funnel", ImmutableList
@@ -78,7 +78,7 @@ public final class IngamusEngine implements ServiceProvider, ServiceRegistry {
 			Module module = new AbstractModule() {
 				@Override
 				protected void configure() {
-					for (Module externalModule : externalModules) {
+					for (Module externalModule : modules) {
 						install(externalModule);
 					}
 				}
@@ -95,15 +95,14 @@ public final class IngamusEngine implements ServiceProvider, ServiceRegistry {
 	private final ImmutableSet<ServiceProvider> externalProviders;
 
 	private final ServiceInjector serviceInjector;
-	private final List<Service> builtinServices;
-	private final List<Service> addedServices;
+	private final Collection<Service> addedServices;
 
 	private final Collection<Service> allServices;
 
 	private final String descriptor;
 
 	IngamusEngine(String descriptor, CompositionFactory factory,
-			List<Service> internalServices, List<Module> modules,
+			Collection<Service> internalServices, Collection<Module> modules,
 			Set<ServiceProvider> externalProviders) {
 		this.descriptor = descriptor;
 		this.externalProviders = ImmutableSet.copyOf(externalProviders);
@@ -115,8 +114,7 @@ public final class IngamusEngine implements ServiceProvider, ServiceRegistry {
 			ArrayListMultimap<String, Service> multimap = ArrayListMultimap
 					.create();
 
-			this.builtinServices = multimap.get("Builtin");
-			this.builtinServices.addAll(internalServices);
+			multimap.get("Builtin").addAll(internalServices);
 
 			this.addedServices = multimap.get("Added");
 
@@ -146,13 +144,13 @@ public final class IngamusEngine implements ServiceProvider, ServiceRegistry {
 		return descriptor;
 	}
 
-	public <T extends Service> T injectService(Class<T> clazz) {
-		return serviceInjector.getService(clazz);
-	}
-
 	@Override
 	public Collection<Service> getServices() {
 		return allServices;
+	}
+
+	public <T extends Service> T injectService(Class<T> clazz) {
+		return serviceInjector.getService(clazz);
 	}
 
 	@Override

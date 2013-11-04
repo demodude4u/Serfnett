@@ -1,11 +1,13 @@
 package com.vectorcat.ingamus.example.particles;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.vectorcat.ingamus.IngamusActorService;
 import com.vectorcat.ingamus.IngamusActorService.BatchJob;
+import com.vectorcat.ingamus.IngamusEventBus;
 import com.vectorcat.ingamus.example.particles.ParticleActor.Factory;
 import com.vectorcat.ingamus.spi.IngamusService;
 
@@ -18,9 +20,17 @@ public class ParticleSpawnerService extends AbstractIdleService implements
 
 	@Inject
 	ParticleSpawnerService(ParticleActor.Factory factory,
-			@Named("ParticleSpawner") IngamusActorService.BatchJob batchJob) {
+			@Named("ParticleSpawner") IngamusActorService.BatchJob batchJob,
+			IngamusEventBus eventBus) {
 		this.factory = factory;
 		this.batchJob = batchJob;
+
+		eventBus.register(this);
+	}
+
+	@Subscribe
+	public void onUpdateParticles(UpdateParticlesEvent event) {
+		batchJob.processAll();
 	}
 
 	@Override
@@ -46,10 +56,6 @@ public class ParticleSpawnerService extends AbstractIdleService implements
 	@Override
 	protected void startUp() throws Exception {
 		// NOP
-	}
-
-	public void updateActors() {
-		batchJob.processAll();
 	}
 
 }

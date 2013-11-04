@@ -13,7 +13,7 @@ import com.vectorcat.ingamus.example.particles.util.FastMath;
 
 public class TestController implements ParticleController {
 
-	private static final double spawnRatePerSecond = 250;
+	private static final double spawnRatePerSecond = 500;
 	private static final double lifetime = 10;
 
 	private final ParticleSpawnerService spawnerService;
