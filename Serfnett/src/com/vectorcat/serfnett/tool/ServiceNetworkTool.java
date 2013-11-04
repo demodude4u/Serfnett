@@ -150,6 +150,10 @@ public class ServiceNetworkTool {
 		jFrame = createJFrame(graphComponent);
 	}
 
+	public ServiceNetworkTool(ServiceNode root) {
+		this(ImmutableList.of(root));
+	}
+
 	private int countLines(String string) {
 		return string.split("\r\n|\r|\n").length;
 	}
