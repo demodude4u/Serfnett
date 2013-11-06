@@ -1,8 +1,6 @@
 float f = 100.0;
 float d = 100.0;
 
-varies float speed;
-
 void main(void) {
 	vec4 pos = ftransform();
     gl_FrontColor = gl_Color;
