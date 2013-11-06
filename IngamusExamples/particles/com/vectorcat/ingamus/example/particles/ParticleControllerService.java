@@ -99,7 +99,7 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 
 		// double simulationSeconds = seconds;
 		double simulationSeconds = 1.0 / FPS;
-		// double simulationSeconds = 0.2 / FPS;
+		// double simulationSeconds = 0.3 / FPS;
 		simulationSecondsElapsed += simulationSeconds;
 
 		controller.runDuration(simulationSeconds, simulationSecondsElapsed);

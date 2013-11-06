@@ -2,6 +2,9 @@ package com.vectorcat.ingamus.example.particles.renderer;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.PrintStream;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -81,23 +84,68 @@ public class TestRendererJOGL implements ParticleRendererJOGL {
 				shaderResource.getText("test.frag"));
 	}
 
+	private void checkStatusCompileShader(GL2 gl2, int shaderID) {
+		IntBuffer intBuffer = IntBuffer.allocate(1);
+		gl2.glGetShaderiv(shaderID, GL2.GL_COMPILE_STATUS, intBuffer);
+
+		if (intBuffer.get(0) != GL2.GL_TRUE) {
+			System.err.println("Shader compile error: ");
+			printShaderLog(System.err, gl2, shaderID, intBuffer);
+			System.exit(1);
+		}
+	}
+
+	private void checkStatusLinkProgram(GL2 gl2, int shaderProgramID) {
+		IntBuffer intBuffer = IntBuffer.allocate(1);
+		gl2.glGetProgramiv(shaderProgramID, GL2.GL_LINK_STATUS, intBuffer);
+
+		if (intBuffer.get(0) != GL2.GL_TRUE) {
+			System.err.println("Program link error: ");
+			printProgramLog(System.err, gl2, shaderProgramID, intBuffer);
+			System.exit(1);
+		}
+	}
+
+	private void checkStatusValidateProgram(GL2 gl2, int shaderProgramID) {
+		IntBuffer intBuffer = IntBuffer.allocate(1);
+		gl2.glGetProgramiv(shaderProgramID, GL2.GL_VALIDATE_STATUS, intBuffer);
+
+		if (intBuffer.get(0) != GL2.GL_TRUE) {
+			System.err.println("Program validate error: ");
+			printProgramLog(System.err, gl2, shaderProgramID, intBuffer);
+			System.exit(1);
+		}
+	}
+
+	private int createShader(GL2 gl2, int type, String shaderCode) {
+		int shaderID = gl2.glCreateShader(type);
+		gl2.glShaderSource(shaderID, 1, new String[] { shaderCode },
+				(int[]) null, 0);
+		gl2.glCompileShader(shaderID);
+		checkStatusCompileShader(gl2, shaderID);
+		return shaderID;
+	}
+
 	private int createShaderProgram(GL2 gl2, String vertexShaderCode,
 			String fragmentShaderCode) {
-		int vertexShaderID = gl2.glCreateShader(GL2.GL_VERTEX_SHADER);
-		gl2.glShaderSource(vertexShaderID, 1,
-				new String[] { vertexShaderCode }, (int[]) null, 0);
-		gl2.glCompileShader(vertexShaderID);
 
-		int fragmentShaderID = gl2.glCreateShader(GL2.GL_FRAGMENT_SHADER);
-		gl2.glShaderSource(fragmentShaderID, 1,
-				new String[] { fragmentShaderCode }, (int[]) null, 0);
-		gl2.glCompileShader(fragmentShaderID);
+		System.out.println("Creating vertex shader...");
+		int vertexShaderID = createShader(gl2, GL2.GL_VERTEX_SHADER,
+				vertexShaderCode);
+		System.out.println("Creating fragment shader...");
+		int fragmentShaderID = createShader(gl2, GL2.GL_FRAGMENT_SHADER,
+				fragmentShaderCode);
 
 		int shaderProgramID = gl2.glCreateProgram();
+
 		gl2.glAttachShader(shaderProgramID, vertexShaderID);
 		gl2.glAttachShader(shaderProgramID, fragmentShaderID);
+
 		gl2.glLinkProgram(shaderProgramID);
+		checkStatusLinkProgram(gl2, shaderProgramID);
+
 		gl2.glValidateProgram(shaderProgramID);
+		checkStatusValidateProgram(gl2, shaderProgramID);
 
 		return shaderProgramID;
 	}
@@ -122,6 +170,37 @@ public class TestRendererJOGL implements ParticleRendererJOGL {
 		});
 	}
 
+	private void printProgramLog(PrintStream out, GL2 gl2, int shaderProgramID,
+			IntBuffer intBuffer) {
+		gl2.glGetProgramiv(shaderProgramID, GL2.GL_INFO_LOG_LENGTH, intBuffer);
+		int size = intBuffer.get(0);
+		if (size > 0) {
+			ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+			gl2.glGetProgramInfoLog(shaderProgramID, size, intBuffer,
+					byteBuffer);
+			for (byte b : byteBuffer.array()) {
+				out.print((char) b);
+			}
+		} else {
+			out.println("Unknown");
+		}
+	}
+
+	private void printShaderLog(PrintStream out, GL2 gl2, int shaderID,
+			IntBuffer intBuffer) {
+		gl2.glGetShaderiv(shaderID, GL2.GL_INFO_LOG_LENGTH, intBuffer);
+		int size = intBuffer.get(0);
+		if (size > 0) {
+			ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+			gl2.glGetShaderInfoLog(shaderID, size, intBuffer, byteBuffer);
+			for (byte b : byteBuffer.array()) {
+				out.print((char) b);
+			}
+		} else {
+			out.println("Unknown");
+		}
+	}
+
 	@Override
 	public void render(GL2 gl2) throws Exception {
 		while (!batchJob.isEmpty()) {
@@ -129,6 +208,8 @@ public class TestRendererJOGL implements ParticleRendererJOGL {
 		}
 
 		Particle.F f = new F();
+
+		gl2.glUseProgram(shaderProgram);
 
 		for (Particle particle : particles) {
 			f.get(particle);
@@ -168,7 +249,10 @@ public class TestRendererJOGL implements ParticleRendererJOGL {
 			}
 
 			gl2.glEnd();
+
 		}
+
+		gl2.glUseProgram(0);
 
 		debugTextRenderer.beginRendering(512, 512, true);
 		debugTextRenderer.setColor(Color.white);
