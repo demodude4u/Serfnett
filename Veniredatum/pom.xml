@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.vectorcat.venire</groupId>
+  <artifactId>Veniredatum</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Veniredatum</name>
+  <description>Tooling designed for Serfnett to support remote service connections via RPC and event streaming.</description>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.esotericsoftware.kryo</groupId>
+			<artifactId>kryo</artifactId>
+			<version>2.22</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

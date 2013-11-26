@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="example"/>
-	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" output="target/classes" path="example">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="test">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="guava-14.0.1.jar" sourcepath="guava-14.0.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Serfnett/guava-14.0.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="guice-3.0.jar" sourcepath="guice-3.0-sources.zip"/>
-	<classpathentry exported="true" kind="lib" path="javax.inject.jar"/>
-	<classpathentry exported="true" kind="lib" path="aopalliance.jar"/>
-	<classpathentry kind="lib" path="jgraphx.jar" sourcepath="jgraphx-sources.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Serfnett/jgraphx-javadoc.zip!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Veniredatum"/>
-	<classpathentry exported="true" kind="lib" path="/Veniredatum/kryo-debug-2.21-all.jar" sourcepath="/Veniredatum/kryo-source.zip">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Veniredatum/kryo-javadoc.zip!/"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jgraphx.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
