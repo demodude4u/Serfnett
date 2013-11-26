@@ -22,8 +22,6 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 	private final LinkedHashSet<Particle> particles = Sets.newLinkedHashSet();
 
 	private boolean hasFirstIteration = false;
-	private long firstIterationTimeStamp;
-	private long lastIterationTimeStamp;
 
 	private double simulationSecondsElapsed = 0;
 
@@ -90,11 +88,8 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 
 	@Override
 	protected void runOneFrame() {
-		long currentTimeMillis = System.currentTimeMillis();
-
 		if (!hasFirstIteration) {
 			hasFirstIteration = true;
-			firstIterationTimeStamp = lastIterationTimeStamp = currentTimeMillis;
 		}
 
 		// double simulationSeconds = seconds;
@@ -109,8 +104,6 @@ public class ParticleControllerService extends AbstractIngamusFPSService
 				simulationSecondsElapsed));
 
 		applyPhysicsForDuration(particles, simulationSeconds);
-
-		lastIterationTimeStamp = currentTimeMillis;
 	}
 
 	@Override
